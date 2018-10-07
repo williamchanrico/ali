@@ -1,5 +1,6 @@
 # ali
-Personal tool to interact with Aliyun or Alibaba Cloud console.
+
+Personal CLI tool to interact with Aliyun or Alibaba Cloud console.
 
 ## Setup
 
@@ -11,13 +12,15 @@ ALICLOUD_SECRET_KEY: <YOUR_SECRET_KEY>
 ALICLOUD_REGION_ID: ap-southeast-1
 ```
 
-You can also store those config in Env variable, whichever suits you.
+Uses `viper.AutomaticEnv()`, means it can also read those config from Env variable.
+
+Supports `dep ensure -v` to make life a bit easier.
 
 ## Usage
 
 ```
 $ ali -h
-Personal tool to interact with Aliyun or Alibaba Cloud console.
+Personal CLI tool to interact with Aliyun or Alibaba Cloud console.
 
 Usage:
   ali [command]
