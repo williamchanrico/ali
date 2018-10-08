@@ -27,7 +27,9 @@ TotalCapacity: %v (Protected: %v)
 MinSize: %v - MaxSize: %v
 ScalingConfigurationName: %v
 UserData:
+>>> BEGIN - USERDATA
 %v
+<<< END - USERDATA
 `, s.ScalingGroupName,
 		s.ScalingGroupID,
 		s.TotalCapacity,
