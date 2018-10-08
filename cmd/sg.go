@@ -38,7 +38,7 @@ relatively useful info about the scaling group for day to day use.`,
 		}
 
 		for i := range sgList {
-			fmt.Printf("--- %v ---\n", i)
+			fmt.Printf("\n--------------- %v ---------------\n", i)
 			fmt.Println(sgList[i].String())
 			fmt.Printf("--- https://essnew.console.aliyun.com/"+
 				"?spm=5176.2020520101.203.4.65837d33Df8Y22#/detail/ap-southeast-1/"+
@@ -49,5 +49,4 @@ relatively useful info about the scaling group for day to day use.`,
 
 func init() {
 	rootCmd.AddCommand(sgCmd)
-
 }

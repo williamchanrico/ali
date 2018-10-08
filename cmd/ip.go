@@ -42,7 +42,7 @@ var ipCmd = &cobra.Command{
 			fmt.Println(fmt.Errorf("Failed to query IP list: %s", err))
 		}
 
-		fmt.Println("---")
+		fmt.Println("\n---")
 		fmt.Println(strings.Join(ipList, "\n"))
 		fmt.Println("---")
 	},
