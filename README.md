@@ -19,13 +19,15 @@ Supports `dep ensure -v` to make life a bit easier.
 ## Usage
 
 ```
-$ ali -h
+$ ali help
+Using config file: /home/william/.ali.yaml
 Personal CLI tool to interact with Aliyun or Alibaba Cloud console.
 
 Usage:
   ali [command]
 
 Available Commands:
+  et          Query Event-Trigger Task(s) from aliyun.
   help        Help about any command
   ip          Query active IP(s) of a service hostgroup
   sg          Query active ScalingGroup of a service by name
