@@ -18,6 +18,7 @@ type ETInfo struct {
 	Enable             bool
 }
 
+// String pretty prints the struct ETInfo
 func (e *ETInfo) String() string {
 	return fmt.Sprintf(`> Alarm Name: %v (Enabled: %v)
 > %v %v %v, %v times
