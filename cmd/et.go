@@ -75,7 +75,7 @@ compromise than using an Event-Trigger Task ID`,
 
 			fmt.Println("UserData:")
 			color.Red(">>> BEGIN - USERDATA")
-			color.Cyan(sgList[i].UserData)
+			color.Blue(sgList[i].UserData)
 			color.Red("<<< END - USERDATA")
 			color.Yellow("--- https://essnew.console.aliyun.com/?spm=5176.2020520101.203.4." +
 				"278f7d33hepSMf#/task/alarm/region/ap-southeast-1 ---\n")

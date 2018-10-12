@@ -56,7 +56,7 @@ relatively useful info about the scaling group for day to day use.`,
 
 			fmt.Println("UserData:")
 			color.Red(">>> BEGIN - USERDATA")
-			color.Cyan(sgList[i].UserData)
+			color.Blue(sgList[i].UserData)
 			color.Red("<<< END - USERDATA")
 
 			color.Yellow("--- https://essnew.console.aliyun.com/"+
