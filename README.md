@@ -2,6 +2,8 @@
 
 Personal CLI tool to interact with Aliyun or Alibaba Cloud console.
 
+This tool is designed with my workplace's cloud environment in mind.
+
 ## Setup
 
 ```
@@ -9,7 +11,7 @@ Personal CLI tool to interact with Aliyun or Alibaba Cloud console.
 ---
 ALICLOUD_ACCESS_KEY: <YOUR_ACCESS_KEY>
 ALICLOUD_SECRET_KEY: <YOUR_SECRET_KEY>
-ALICLOUD_REGION_ID: ap-southeast-1
+ALICLOUD_REGION_ID: <REGION_ID>
 ```
 
 Uses `viper.AutomaticEnv()`, means it can also read those config from Env variable.
