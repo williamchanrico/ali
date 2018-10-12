@@ -16,7 +16,6 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/fatih/color"
 
@@ -46,7 +45,9 @@ var ipCmd = &cobra.Command{
 		}
 
 		color.Yellow("\n---")
-		color.White(strings.Join(ipList, "\n"))
+		for i := range ipList {
+			color.White("%v\t%v", ipList[i].IP, ipList[i].ConsulTag)
+		}
 		color.Yellow("---")
 	},
 }

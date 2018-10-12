@@ -41,7 +41,6 @@ relatively useful info about the scaling group for day to day use.`,
 
 		for i := range sgList {
 			color.Yellow("\n--------------- %v ---------------\n", i)
-			// fmt.Println(sgList[i].String())
 			fmt.Print("ScalingGroupName: ")
 			color.Green(sgList[i].ScalingGroupName)
 

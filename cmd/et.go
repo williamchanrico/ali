@@ -48,7 +48,6 @@ compromise than using an Event-Trigger Task ID`,
 
 			color.Yellow("\n--------------- %v ---------------\n", i)
 			for j := range etList {
-				// fmt.Println(etList[j].String())
 				fmt.Print("> Alarm Name: ")
 				if etList[j].Enable {
 					color.Green("%v (Enabled)", etList[j].Name)
