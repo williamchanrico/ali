@@ -46,7 +46,13 @@ var ipCmd = &cobra.Command{
 
 		color.Yellow("\n---")
 		for i := range ipList {
-			color.White("%v\t%v", ipList[i].IP, ipList[i].ConsulTag)
+			color.Set(color.FgWhite)
+			fmt.Printf("%v", ipList[i].IP)
+
+			color.Set(color.FgYellow)
+			fmt.Printf("\t%v\n", ipList[i].ConsulTag)
+
+			color.Unset()
 		}
 		color.Yellow("---")
 	},
