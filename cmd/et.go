@@ -17,6 +17,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/williamchanrico/ali/cmd/ess"
 )
@@ -30,7 +31,8 @@ because Event-Trigger Task can't be searched by name, and scaling group name is 
 compromise than using an Event-Trigger Task ID`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Querying Event-Trigger Task %v:\n", args[0])
+		fmt.Print("Querying Event-Trigger Task ")
+		color.Green("%v\n", args[0])
 
 		ess := ess.New()
 		sgList, err := ess.QuerySGInfo(args[0])
@@ -44,12 +46,39 @@ compromise than using an Event-Trigger Task ID`,
 				fmt.Println(fmt.Errorf("Failed to query event-trigger task list: %s", err))
 			}
 
-			fmt.Printf("\n--------------- %v ---------------\n", i)
+			color.Yellow("\n--------------- %v ---------------\n", i)
 			for j := range etList {
-				fmt.Println(etList[j].String())
+				// fmt.Println(etList[j].String())
+				fmt.Print("> Alarm Name: ")
+				if etList[j].Enable {
+					color.Green("%v (Enabled)", etList[j].Name)
+				} else {
+					color.Red("%v (Disabled)", etList[j].Name)
+				}
+
+				fmt.Printf("> %v %v ", etList[j].MetricName, etList[j].ComparisonOperator)
+				color.White("%v (%v times)", etList[j].Threshold, etList[j].EvaluationCount)
+				fmt.Println()
 			}
-			fmt.Println(sgList[i].String())
-			fmt.Printf("--- https://essnew.console.aliyun.com/?spm=5176.2020520101.203.4." +
+
+			fmt.Print("ScalingGroupName: ")
+			color.Green(sgList[i].ScalingGroupName)
+
+			fmt.Printf("ScalingGroupID: %v\n", sgList[i].ScalingGroupID)
+
+			fmt.Print("MinSize: ")
+			color.Yellow("%v", sgList[i].MinSize)
+
+			fmt.Print("MaxSize: ")
+			color.Yellow("%v", sgList[i].MaxSize)
+
+			fmt.Printf("ScalingConfigurationName: %v", sgList[i].ScalingConfigurationName)
+
+			fmt.Println("UserData:")
+			color.Red(">>> BEGIN - USERDATA")
+			color.Cyan(sgList[i].UserData)
+			color.Red("<<< END - USERDATA")
+			color.Yellow("--- https://essnew.console.aliyun.com/?spm=5176.2020520101.203.4." +
 				"278f7d33hepSMf#/task/alarm/region/ap-southeast-1 ---\n")
 		}
 	},

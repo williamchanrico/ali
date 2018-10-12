@@ -18,6 +18,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/fatih/color"
+
 	"github.com/spf13/cobra"
 	"github.com/williamchanrico/ali/cmd/ecs"
 )
@@ -34,7 +36,8 @@ var ipCmd = &cobra.Command{
 - Hostgroup: [HOSTGROUP]`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Querying IP(s) of %v hostgroup:\n", args[0])
+		fmt.Print("Querying IP(s) of hostgroup ")
+		color.Green("%v\n", args[0])
 
 		ecs := ecs.New()
 		ipList, err := ecs.QueryIPList(args[0])
@@ -42,9 +45,9 @@ var ipCmd = &cobra.Command{
 			fmt.Println(fmt.Errorf("Failed to query IP list: %s", err))
 		}
 
-		fmt.Println("\n---")
-		fmt.Println(strings.Join(ipList, "\n"))
-		fmt.Println("---")
+		color.Yellow("\n---")
+		color.White(strings.Join(ipList, "\n"))
+		color.Yellow("---")
 	},
 }
 

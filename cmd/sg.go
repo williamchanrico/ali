@@ -17,6 +17,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/williamchanrico/ali/cmd/ess"
 )
@@ -29,7 +30,8 @@ var sgCmd = &cobra.Command{
 relatively useful info about the scaling group for day to day use.`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Querying info about %v scaling group:\n", args[0])
+		fmt.Print("Querying info about scaling group ")
+		color.Green("%v\n", args[0])
 
 		ess := ess.New()
 		sgList, err := ess.QuerySGInfo(args[0])
@@ -38,9 +40,27 @@ relatively useful info about the scaling group for day to day use.`,
 		}
 
 		for i := range sgList {
-			fmt.Printf("\n--------------- %v ---------------\n", i)
-			fmt.Println(sgList[i].String())
-			fmt.Printf("--- https://essnew.console.aliyun.com/"+
+			color.Yellow("\n--------------- %v ---------------\n", i)
+			// fmt.Println(sgList[i].String())
+			fmt.Print("ScalingGroupName: ")
+			color.Green(sgList[i].ScalingGroupName)
+
+			fmt.Printf("ScalingGroupID: %v\n", sgList[i].ScalingGroupID)
+
+			fmt.Print("MinSize: ")
+			color.Yellow("%v", sgList[i].MinSize)
+
+			fmt.Print("MaxSize: ")
+			color.Yellow("%v", sgList[i].MaxSize)
+
+			fmt.Printf("ScalingConfigurationName: %v", sgList[i].ScalingConfigurationName)
+
+			fmt.Println("UserData:")
+			color.Red(">>> BEGIN - USERDATA")
+			color.Cyan(sgList[i].UserData)
+			color.Red("<<< END - USERDATA")
+
+			color.Yellow("--- https://essnew.console.aliyun.com/"+
 				"?spm=5176.2020520101.203.4.65837d33Df8Y22#/detail/ap-southeast-1/"+
 				"%v/basicInfo ---\n", sgList[i].ScalingGroupID)
 		}
