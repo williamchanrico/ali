@@ -24,6 +24,7 @@ import (
 )
 
 var hostGroup string
+var noConsulTags bool
 
 // ipCmd represents the ip command
 var ipCmd = &cobra.Command{
@@ -49,8 +50,12 @@ var ipCmd = &cobra.Command{
 			color.Set(color.FgWhite)
 			fmt.Printf("%v", ipList[i].IP)
 
-			color.Set(color.FgYellow)
-			fmt.Printf("\t%v\n", ipList[i].ConsulTag)
+			if !noConsulTags {
+				color.Set(color.FgYellow)
+				fmt.Printf("\t%v\n", ipList[i].ConsulTag)
+			} else {
+				fmt.Printf("\n")
+			}
 
 			color.Unset()
 		}
@@ -59,5 +64,6 @@ var ipCmd = &cobra.Command{
 }
 
 func init() {
+	ipCmd.Flags().BoolVarP(&noConsulTags, "no-tag", "n", false, "Hide consul_tags")
 	rootCmd.AddCommand(ipCmd)
 }
