@@ -22,7 +22,7 @@ Supports `dep ensure -v` to make life a bit easier.
 
 ## Usage
 
-```sh
+```txt
 $ ali help
 Using config file: /home/william/.ali.yaml
 Personal CLI tool to interact with Aliyun or Alibaba Cloud console.
@@ -45,7 +45,7 @@ Use "ali [command] --help" for more information about a command.
 
 ## Go Version
 
-```sh
+```txt
 $ go version
 go version go1.11 linux/amd64
 ```
