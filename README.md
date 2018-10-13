@@ -4,9 +4,11 @@ Personal CLI tool to interact with Aliyun or Alibaba Cloud console.
 
 This tool is designed with my workplace's cloud environment in mind.
 
+[![asciicast](https://asciinema.org/a/gee4XkKWpvENAuBOaHbSMFIIN.png)](https://asciinema.org/a/gee4XkKWpvENAuBOaHbSMFIIN)
+
 ## Setup
 
-```
+```sh
 > /home/william/.ali.yaml
 ---
 ALICLOUD_ACCESS_KEY: <YOUR_ACCESS_KEY>
@@ -20,7 +22,7 @@ Supports `dep ensure -v` to make life a bit easier.
 
 ## Usage
 
-```
+```sh
 $ ali help
 Using config file: /home/william/.ali.yaml
 Personal CLI tool to interact with Aliyun or Alibaba Cloud console.
@@ -43,7 +45,7 @@ Use "ali [command] --help" for more information about a command.
 
 ## Go Version
 
-```
+```sh
 $ go version
 go version go1.11 linux/amd64
 ```
