@@ -1,5 +1,7 @@
 # ali
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/williamchanrico/ali)](https://goreportcard.com/report/github.com/williamchanrico/ali)
+
 Personal CLI tool to interact with Aliyun or Alibaba Cloud console.
 
 This tool is designed with my workplace's cloud environment in mind.
