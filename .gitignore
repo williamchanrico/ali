@@ -13,3 +13,6 @@
 
 # Vendors
 vendor/
+
+# Binaries compiled from this project
+ali

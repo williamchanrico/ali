@@ -71,6 +71,9 @@ compromise than using an Event-Trigger Task ID`,
 			fmt.Print("MaxSize: ")
 			color.Yellow("%v", sgList[i].MaxSize)
 
+			fmt.Print("TotalSize: ")
+			color.Yellow("%v", sgList[i].TotalCapacity)
+
 			fmt.Printf("ScalingConfigurationName: %v\n", sgList[i].ScalingConfigurationName)
 
 			color.Red(">>> BEGIN - USERDATA")

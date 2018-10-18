@@ -52,6 +52,9 @@ relatively useful info about the scaling group for day to day use.`,
 			fmt.Print("MaxSize: ")
 			color.Yellow("%v", sgList[i].MaxSize)
 
+			fmt.Print("TotalSize: ")
+			color.Yellow("%v", sgList[i].TotalCapacity)
+
 			fmt.Printf("ScalingConfigurationName: %v\n", sgList[i].ScalingConfigurationName)
 
 			color.Red(">>> BEGIN - USERDATA")
