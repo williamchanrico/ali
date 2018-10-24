@@ -1,6 +1,21 @@
+// Copyright © 2018 William Chanrico
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package ess
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/requests"
@@ -36,13 +51,16 @@ UserData:
 		s.ProtectedCapacity,
 		s.MinSize,
 		s.MaxSize,
-
 		s.ScalingConfigurationName,
 		s.UserData)
 }
 
 // QuerySGInfo will query relatively useful info about a scaling group
 func (c *Client) QuerySGInfo(name string) ([]SGInfo, error) {
+	return c.queryScalingGroups(name)
+}
+
+func (c *Client) queryScalingGroups(name string) ([]SGInfo, error) {
 	req := ess.CreateDescribeScalingGroupsRequest()
 	req.PageSize = requests.NewInteger(50)
 	req.ScalingGroupName = name
@@ -80,4 +98,19 @@ func (c *Client) QuerySGInfo(name string) ([]SGInfo, error) {
 	}
 
 	return scalingGroupList, nil
+}
+
+func (c *Client) getScalingGroupID(scalingGroupName string) (string, error) {
+	sgInfo, err := c.queryScalingGroups(scalingGroupName)
+	if err != nil {
+		return "", err
+	}
+
+	for _, sg := range sgInfo {
+		if sg.ScalingGroupName == scalingGroupName {
+			return sg.ScalingGroupID, nil
+		}
+	}
+
+	return "", errors.New("ScalingGroup not found")
 }
