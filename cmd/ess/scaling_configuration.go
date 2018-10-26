@@ -55,8 +55,8 @@ func (c *Client) QuerySCInfo(id string) ([]SCInfo, error) {
 				},
 			)
 		}
-		totalCount = requests.NewInteger(resp.TotalCount)
 		req.PageNumber = requests.NewInteger(resp.PageNumber + 1)
+		totalCount = requests.NewInteger(len(resp.ScalingConfigurations.ScalingConfiguration))
 	}
 
 	return scalingConfigurationList, nil

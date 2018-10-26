@@ -71,8 +71,8 @@ func (c *Client) QueryIPList(hostgroup string) ([]IPInfo, error) {
 				},
 			)
 		}
-		totalCount = requests.NewInteger(resp.TotalCount)
 		req.PageNumber = requests.NewInteger(resp.PageNumber + 1)
+		totalCount = requests.NewInteger(len(resp.Instances.Instance))
 	}
 
 	return ipList, nil

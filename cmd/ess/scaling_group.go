@@ -93,8 +93,8 @@ func (c *Client) queryScalingGroups(name string) ([]SGInfo, error) {
 				},
 			)
 		}
-		totalCount = requests.NewInteger(resp.TotalCount)
 		req.PageNumber = requests.NewInteger(resp.PageNumber + 1)
+		totalCount = requests.NewInteger(len(resp.ScalingGroups.ScalingGroup))
 	}
 
 	return scalingGroupList, nil
