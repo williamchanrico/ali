@@ -199,8 +199,8 @@ func (c *Client) describeScalingRules(scalingGroupName string) ([]SRInfo, error)
 				},
 			)
 		}
-		totalCount = requests.NewInteger(resp.TotalCount)
 		req.PageNumber = requests.NewInteger(resp.PageNumber + 1)
+		totalCount = requests.NewInteger(len(resp.ScalingRules.ScalingRule))
 	}
 
 	return scalingRuleList, nil

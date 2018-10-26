@@ -73,8 +73,8 @@ func (c *Client) QueryETInfo(scalingGroupID string) ([]ETInfo, error) {
 			)
 		}
 
-		totalCount = requests.NewInteger(resp.TotalCount)
 		req.PageNumber = requests.NewInteger(resp.PageNumber + 1)
+		totalCount = requests.NewInteger(len(resp.AlarmList.Alarm))
 	}
 
 	return eventTriggerTaskList, nil
