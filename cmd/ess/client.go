@@ -24,7 +24,7 @@ type Client struct {
 	*ess.Client
 }
 
-// New creates a new ECS client
+// New creates a new ESS client
 func New() *Client {
 	essClient, err := ess.NewClientWithAccessKey(
 		viper.GetString("ALICLOUD_REGION_ID"),
