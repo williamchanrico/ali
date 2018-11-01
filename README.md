@@ -37,6 +37,7 @@ Available Commands:
   et          Query Event-Trigger Task(s) from aliyun.
   help        Help about any command
   ip          Query active IP(s) of a service hostgroup
+  price       Show real-time price per hour for the instance type in USD
   sg          Query active ScalingGroup of a service by name
 
 Flags:
