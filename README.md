@@ -20,7 +20,7 @@ ALICLOUD_REGION_ID: <REGION_ID>
 
 Uses `viper.AutomaticEnv()`, means it can also read those config from Env variable.
 
-Supports `dep ensure -v` to make life a bit easier.
+Supports `dep ensure -v` to make our life a bit easier.
 
 ## Usage
 
@@ -33,6 +33,7 @@ Usage:
   ali [command]
 
 Available Commands:
+  downscale   Remove all upscaled instance down to minimum instance.
   et          Query Event-Trigger Task(s) from aliyun.
   help        Help about any command
   ip          Query active IP(s) of a service hostgroup

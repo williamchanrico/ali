@@ -22,6 +22,12 @@ import (
 	"github.com/williamchanrico/ali/cmd/ess"
 )
 
+var (
+	upscale   bool
+	downscale bool
+	all       bool
+)
+
 // etCmd represents the et command
 var etCmd = &cobra.Command{
 	Use:   "et [SCALING_GROUP_NAME]",

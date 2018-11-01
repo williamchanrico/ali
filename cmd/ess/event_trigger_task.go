@@ -79,3 +79,29 @@ func (c *Client) QueryETInfo(scalingGroupID string) ([]ETInfo, error) {
 
 	return eventTriggerTaskList, nil
 }
+
+// EnableEventTriggerTask will enable the event trigger task
+func (c *Client) EnableEventTriggerTask(alarmTaskID string) error {
+	req := ess.CreateEnableAlarmRequest()
+	req.AlarmTaskId = alarmTaskID
+
+	_, err := c.EnableAlarm(req)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// DisableEventTriggerTask will disable the event trigger task
+func (c *Client) DisableEventTriggerTask(alarmTaskID string) error {
+	req := ess.CreateDisableAlarmRequest()
+	req.AlarmTaskId = alarmTaskID
+
+	_, err := c.DisableAlarm(req)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
