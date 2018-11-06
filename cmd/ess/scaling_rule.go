@@ -103,6 +103,37 @@ func (c *Client) RemoveUpscaledInstances(scalingGroupName string, retryCount int
 	return ok, nil
 }
 
+// UpscaleInstances will add numToAdd instances by triggering the upscale scaling rule
+func (c *Client) UpscaleInstances(scalingGroupName string, numToAdd int) (bool, error) {
+	ok := false
+	upscaleRule, err := c.getUpScalingRule(scalingGroupName)
+	if err != nil {
+		return ok, err
+	}
+
+	fmt.Printf("Temporarily modifying upscale rule to %v instance(s)\n", numToAdd)
+	err = c.modifyScalingRule(upscaleRule.ScalingRuleID, numToAdd, "QuantityChangeInCapacity")
+	if err != nil {
+		return ok, err
+	}
+
+	fmt.Printf("Executing upscale rule (will retry 3 times per 10s)\n")
+	err = c.executeScalingRule(upscaleRule.ScalingRuleAri, 3, 10)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		ok = true
+	}
+
+	fmt.Println("Reverting upscale rule to", upscaleRule.AdjustmentValue)
+	err = c.modifyScalingRule(upscaleRule.ScalingRuleID, upscaleRule.AdjustmentValue, upscaleRule.AdjustmentType)
+	if err != nil {
+		return ok, err
+	}
+
+	return ok, nil
+}
+
 // executeScalingRule will execute specified scaling rule, will retry every 'retryInterval' for 'retryCount' times
 // 'retryInterval' is in seconds
 func (c *Client) executeScalingRule(scalingRuleAri string, retryCount int, retryInterval int) error {
@@ -156,10 +187,27 @@ func (c *Client) getDownScalingRule(scalingGroupName string) (*SRInfo, error) {
 }
 
 // modifyScalingRuleAdjValue will modify adjustment value of the scaling rule
+// TODO: Deprecate this and replace with modifyScalingRule
 func (c *Client) modifyScalingRuleAdjValue(scalingRuleID string, adjValue int) error {
 	req := ess.CreateModifyScalingRuleRequest()
 	req.AdjustmentValue = requests.NewInteger(adjValue)
 	req.ScalingRuleId = scalingRuleID
+
+	if _, err := c.ModifyScalingRule(req); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// modifyScalingRule will modify adjustment type and value of the scaling rule
+// AdjustmentType is in form of -N to N (negative number if you want a downscale rule)
+// possible adjType: "PercentChangeInCapacity", and "QuantityChangeInCapacity"
+func (c *Client) modifyScalingRule(scalingRuleID string, adjValue int, adjType string) error {
+	req := ess.CreateModifyScalingRuleRequest()
+	req.AdjustmentValue = requests.NewInteger(adjValue)
+	req.ScalingRuleId = scalingRuleID
+	req.AdjustmentType = adjType
 
 	if _, err := c.ModifyScalingRule(req); err != nil {
 		return err

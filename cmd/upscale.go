@@ -23,41 +23,39 @@ import (
 	"github.com/williamchanrico/ali/cmd/ess"
 )
 
-// downscaleCmd represents the downscale command
-var downscaleCmd = &cobra.Command{
-	Use:   "downscale [SCALING_GROUP_NAME] [RETRY_COUNT] [RETRY_INTERVAL]",
-	Short: "Remove all upscaled instance down to minimum instance.",
-	Long:  `Will remove all upscaled instance down to minimum instance`,
-	Args:  cobra.ExactArgs(3),
+// upscaleCmd represents the upscale command
+var upscaleCmd = &cobra.Command{
+	Use:   "upscale [SCALING_GROUP_NAME] [NUM_OF_INSTANCES_TO_ADD]",
+	Short: "Upscale a scaling group to add specified number of instances.",
+	Long: `Upscale a scaling group to add specified number of instances.
+Will temporarily change the upscale scaling rule to match NUM_OF_INSTANCES_TO_ADD number,
+execute it, and revert the number.`,
+	Args: cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Print("Removing upscaled instances in scaling group ")
+		fmt.Print("Upscale instance(s) in scaling group ")
 		color.Green("%v\n", args[0])
 
 		ess := ess.New()
 
-		retryCount, err := strconv.Atoi(args[1])
+		numToAdd, err := strconv.Atoi(args[1])
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		retryInterval, err := strconv.Atoi(args[2])
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		ok, err := ess.RemoveUpscaledInstances(args[0], retryCount, retryInterval)
+		color.White("Adding %v instance(s)\n", numToAdd)
+		ok, err := ess.UpscaleInstances(args[0], numToAdd)
 		if err != nil {
 			fmt.Println(err)
 		}
 
 		if ok {
-			color.Green("Successfully removed upscaled instances")
+			color.Green("Successfully upscaled %v instance(s)", numToAdd)
 		} else {
-			color.Red("Failed to remove upscaled instances")
+			color.Red("Failed to upscale instance(s)")
 		}
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(downscaleCmd)
+	rootCmd.AddCommand(upscaleCmd)
 }
