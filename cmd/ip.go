@@ -24,6 +24,7 @@ import (
 
 var hostGroup string
 var noConsulTags bool
+var includeStoppedInstances bool
 
 // ipCmd represents the ip command
 var ipCmd = &cobra.Command{
@@ -32,7 +33,10 @@ var ipCmd = &cobra.Command{
 	Long: `Query IP(s) of a service hostgroup with these tags:
 - Env: production
 - Datacenter: alisg
-- Hostgroup: [HOSTGROUP]`,
+- Hostgroup: {HOSTGROUP}
+
+And by default will only show running instance(s),
+Use --all flag to include stopped instance(s).`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Print("Querying IP(s) of hostgroup ")
@@ -46,6 +50,9 @@ var ipCmd = &cobra.Command{
 
 		color.Yellow("\n---")
 		for i := range ipList {
+			if !includeStoppedInstances && !ipList[i].IsRunning {
+				continue
+			}
 			color.Set(color.FgWhite)
 			fmt.Printf("%v", ipList[i].IP)
 
@@ -64,5 +71,6 @@ var ipCmd = &cobra.Command{
 
 func init() {
 	ipCmd.Flags().BoolVarP(&noConsulTags, "no-tag", "n", false, "Hide consul_tags")
+	ipCmd.Flags().BoolVarP(&includeStoppedInstances, "all", "a", false, "Include stopped instance(s)")
 	rootCmd.AddCommand(ipCmd)
 }

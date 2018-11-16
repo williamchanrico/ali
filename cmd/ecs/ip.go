@@ -23,6 +23,7 @@ import (
 type IPInfo struct {
 	IP        string
 	ConsulTag string
+	IsRunning bool
 }
 
 // QueryIPList will query IP of instances with matched hostgroup tag
@@ -63,11 +64,17 @@ func (c *Client) QueryIPList(hostgroup string) ([]IPInfo, error) {
 				}
 			}
 
+			isRunning := false
+			if instance.Status == "Running" {
+				isRunning = true
+			}
+
 			ipList = append(ipList,
 				IPInfo{
 					IP: instance.NetworkInterfaces.
 						NetworkInterface[0].PrimaryIpAddress,
 					ConsulTag: consulTag,
+					IsRunning: isRunning,
 				},
 			)
 		}
