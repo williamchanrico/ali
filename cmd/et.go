@@ -30,7 +30,7 @@ var (
 
 // etCmd represents the et command
 var etCmd = &cobra.Command{
-	Use:   "et [SCALING_GROUP_NAME]",
+	Use:   "et SCALING_GROUP_NAME",
 	Short: "Query Event-Trigger Task(s) from aliyun.",
 	Long: `Query Event-Trigger Task(s) from aliyun. Requires SCALING_GROUP_NAME
 because Event-Trigger Task can't be searched by name, and scaling group name is a better
@@ -85,8 +85,9 @@ compromise than using an Event-Trigger Task ID`,
 			color.Red(">>> BEGIN - USERDATA")
 			color.Blue(sgList[i].UserData)
 			color.Red("<<< END - USERDATA")
-			color.Yellow("--- https://essnew.console.aliyun.com/?spm=5176.2020520101.203.4." +
-				"278f7d33hepSMf#/task/alarm/region/ap-southeast-1 ---\n")
+			color.Yellow("--- https://essnew.console.aliyun.com/"+
+				"?spm=5176.2020520101.203.4.65837d33Df8Y22#/detail/ap-southeast-1/"+
+				"%v/basicInfo ---\n", sgList[i].ScalingGroupID)
 		}
 	},
 }

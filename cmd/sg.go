@@ -24,7 +24,7 @@ import (
 
 // sgCmd represents the sg command
 var sgCmd = &cobra.Command{
-	Use:   "sg [SCALING_GROUP_NAME]",
+	Use:   "sg SCALING_GROUP_NAME",
 	Short: "Query active ScalingGroup of a service by name",
 	Long: `Query active ScalingGroup of a service by name. Will show
 relatively useful info about the scaling group for day to day use.`,

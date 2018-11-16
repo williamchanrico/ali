@@ -25,7 +25,7 @@ import (
 
 // downscaleCmd represents the downscale command
 var downscaleCmd = &cobra.Command{
-	Use:   "downscale [SCALING_GROUP_NAME] [RETRY_COUNT] [RETRY_INTERVAL]",
+	Use:   "downscale SCALING_GROUP_NAME RETRY_COUNT RETRY_INTERVAL",
 	Short: "Remove all upscaled instance down to minimum instance.",
 	Long:  `Will remove all upscaled instance down to minimum instance`,
 	Args:  cobra.ExactArgs(3),

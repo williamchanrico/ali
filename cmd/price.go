@@ -24,8 +24,8 @@ import (
 
 // priceCmd represents the price command
 var priceCmd = &cobra.Command{
-	Use:   "price [INSTANCE_TYPE] {REGION_ID}",
-	Short: "Show real-time price per hour for the instance type in USD",
+	Use:   "price INSTANCE_TYPE [REGION_ID]",
+	Short: "Show real-time price per hour for the instance type in USD (default region: ap-southeast-1).",
 	Long: `Will query real-time price per hour in USD and output the specified instance type
 pricing (default region is Singapore ap-southeast-1)`,
 	Args: cobra.MinimumNArgs(1),

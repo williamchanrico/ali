@@ -27,7 +27,7 @@ var noConsulTags bool
 
 // ipCmd represents the ip command
 var ipCmd = &cobra.Command{
-	Use:   "ip [HOSTGROUP]",
+	Use:   "ip HOSTGROUP",
 	Short: "Query active IP(s) of a service hostgroup",
 	Long: `Query IP(s) of a service hostgroup with these tags:
 - Env: production
