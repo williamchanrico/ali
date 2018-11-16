@@ -25,7 +25,7 @@ import (
 
 // upscaleCmd represents the upscale command
 var upscaleCmd = &cobra.Command{
-	Use:   "upscale [SCALING_GROUP_NAME] [NUM_OF_INSTANCES_TO_ADD]",
+	Use:   "upscale SCALING_GROUP_NAME NUM_OF_INSTANCES_TO_ADD",
 	Short: "Upscale a scaling group to add specified number of instances.",
 	Long: `Upscale a scaling group to add specified number of instances.
 Will temporarily change the upscale scaling rule to match NUM_OF_INSTANCES_TO_ADD number,

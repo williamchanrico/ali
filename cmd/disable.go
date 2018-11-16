@@ -25,7 +25,7 @@ import (
 
 // disableCmd represents the enable command
 var disableCmd = &cobra.Command{
-	Use:   "disable [SCALING_GROUP_NAME]",
+	Use:   "disable SCALING_GROUP_NAME",
 	Short: "Disables upscale/downscale alarm task",
 	Long:  `Will disable upscale or downscale event-trigger task`,
 	Args:  cobra.ExactArgs(1),

@@ -19,16 +19,19 @@ import (
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/ecs"
 )
 
-// IPInfo contains IP along with its associated consul_tags if available
-type IPInfo struct {
-	IP        string
-	ConsulTag string
-	IsRunning bool
+// InstanceInfo contains information about an instance
+type InstanceInfo struct {
+	IP           string
+	CPU          int
+	Memory       int
+	InstanceName string
+	InstanceType string
+	CreationTime string
 }
 
-// QueryIPList will query IP of instances with matched hostgroup tag
+// QueryInstanceList will query info of instances with matched hostgroup tag
 // The other tags are static: "Environment=production" and "Datacenter=alisg"
-func (c *Client) QueryIPList(hostgroup string) ([]IPInfo, error) {
+func (c *Client) QueryInstanceList(hostgroup string) ([]InstanceInfo, error) {
 	req := ecs.CreateDescribeInstancesRequest()
 	req.PageSize = requests.NewInteger(100)
 	req.PageNumber = requests.NewInteger(1)
@@ -47,7 +50,7 @@ func (c *Client) QueryIPList(hostgroup string) ([]IPInfo, error) {
 		},
 	}
 
-	var ipList []IPInfo
+	var instanceList []InstanceInfo
 
 	for totalCount := req.PageSize; totalCount == req.PageSize; {
 		resp, err := c.DescribeInstances(req)
@@ -57,24 +60,17 @@ func (c *Client) QueryIPList(hostgroup string) ([]IPInfo, error) {
 
 		for i := range resp.Instances.Instance {
 			instance := resp.Instances.Instance[i]
-			consulTag := ""
-			for tagIdx := range instance.Tags.Tag {
-				if instance.Tags.Tag[tagIdx].TagKey == "consul_tags" {
-					consulTag = instance.Tags.Tag[tagIdx].TagValue
-				}
-			}
 
-			isRunning := false
-			if instance.Status == "Running" {
-				isRunning = true
-			}
-
-			ipList = append(ipList,
-				IPInfo{
-					IP: instance.NetworkInterfaces.
-						NetworkInterface[0].PrimaryIpAddress,
-					ConsulTag: consulTag,
-					IsRunning: isRunning,
+			instanceList = append(instanceList,
+				InstanceInfo{
+					// IP: instance.NetworkInterfaces.
+					// 	NetworkInterface[0].PrimaryIpAddress,
+					IP: instance.VpcAttributes.
+						PrivateIpAddress.IpAddress[0],
+					CPU:          instance.Cpu,
+					Memory:       instance.Memory,
+					InstanceName: instance.InstanceName,
+					CreationTime: instance.CreationTime,
 				},
 			)
 		}
@@ -82,5 +78,5 @@ func (c *Client) QueryIPList(hostgroup string) ([]IPInfo, error) {
 		totalCount = requests.NewInteger(len(resp.Instances.Instance))
 	}
 
-	return ipList, nil
+	return instanceList, nil
 }
