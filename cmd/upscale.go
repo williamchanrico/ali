@@ -39,7 +39,7 @@ execute it, and revert the number.`,
 
 		numToAdd, err := strconv.Atoi(args[1])
 		if err != nil {
-			fmt.Println(err)
+			panic(err)
 		}
 
 		color.White("Adding %v instance(s)\n", numToAdd)
