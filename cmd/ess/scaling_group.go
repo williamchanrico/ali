@@ -57,10 +57,10 @@ UserData:
 
 // QuerySGInfo will query relatively useful info about a scaling group
 func (c *Client) QuerySGInfo(name string) ([]SGInfo, error) {
-	return c.queryScalingGroups(name)
+	return c.queryScalingGroupsAndScalingConf(name)
 }
 
-func (c *Client) queryScalingGroups(name string) ([]SGInfo, error) {
+func (c *Client) queryScalingGroupsAndScalingConf(name string) ([]SGInfo, error) {
 	req := ess.CreateDescribeScalingGroupsRequest()
 	req.PageSize = requests.NewInteger(50)
 	req.ScalingGroupName = name
@@ -100,8 +100,41 @@ func (c *Client) queryScalingGroups(name string) ([]SGInfo, error) {
 	return scalingGroupList, nil
 }
 
+func (c *Client) queryScalingGroups(name string) ([]SGInfo, error) {
+	req := ess.CreateDescribeScalingGroupsRequest()
+	req.PageSize = requests.NewInteger(50)
+	req.ScalingGroupName = name
+
+	var scalingGroupList []SGInfo
+
+	for totalCount := req.PageSize; totalCount == req.PageSize; {
+		resp, err := c.DescribeScalingGroups(req)
+		if err != nil {
+			return nil, err
+		}
+
+		for i := range resp.ScalingGroups.ScalingGroup {
+			sg := resp.ScalingGroups.ScalingGroup[i]
+			scalingGroupList = append(scalingGroupList,
+				SGInfo{
+					ScalingGroupName:  sg.ScalingGroupName,
+					ScalingGroupID:    sg.ScalingGroupId,
+					TotalCapacity:     sg.TotalCapacity,
+					MinSize:           sg.MinSize,
+					MaxSize:           sg.MaxSize,
+					ProtectedCapacity: sg.ProtectedCapacity,
+				},
+			)
+		}
+		req.PageNumber = requests.NewInteger(resp.PageNumber + 1)
+		totalCount = requests.NewInteger(len(resp.ScalingGroups.ScalingGroup))
+	}
+
+	return scalingGroupList, nil
+}
+
 func (c *Client) getScalingGroupID(scalingGroupName string) (string, error) {
-	sgInfo, err := c.queryScalingGroups(scalingGroupName)
+	sgInfo, err := c.queryScalingGroupsAndScalingConf(scalingGroupName)
 	if err != nil {
 		return "", err
 	}
@@ -113,4 +146,84 @@ func (c *Client) getScalingGroupID(scalingGroupName string) (string, error) {
 	}
 
 	return "", errors.New("ScalingGroup not found")
+}
+
+// ChangeAllMaxSize will change the max size of all scaling groups
+func (c *Client) ChangeAllMaxSize(newMaxSize int) {
+	sgList, err := c.queryScalingGroups("")
+	if err != nil {
+		fmt.Printf("Failed to query all scaling groups: %v", err)
+	}
+
+	for _, sg := range sgList {
+		err = c.changeMaxSize(sg.ScalingGroupID, newMaxSize)
+		if err != nil {
+			fmt.Printf("Error on scaling group %v: %v", sg.ScalingConfigurationName, err)
+		}
+
+		fmt.Println("Changed max size of scaling group:", sg.ScalingGroupName)
+	}
+}
+
+// ChangeMaxSize will change the max size of the specified scaling group
+func (c *Client) ChangeMaxSize(scalingGroupID string, newMaxSize int) error {
+	err := c.changeMaxSize(scalingGroupID, newMaxSize)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) changeMaxSize(scalingGroupID string, newMaxSize int) error {
+	req := ess.CreateModifyScalingGroupRequest()
+	req.ScalingGroupId = scalingGroupID
+	req.MaxSize = requests.NewInteger(newMaxSize)
+
+	_, err := c.ModifyScalingGroup(req)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ChangeAllMinSize will change the min size of all scaling groups
+func (c *Client) ChangeAllMinSize(newMinSize int) {
+	sgList, err := c.queryScalingGroups("")
+	if err != nil {
+		fmt.Printf("Failed to query all scaling groups: %v", err)
+	}
+
+	for _, sg := range sgList {
+		err = c.changeMinSize(sg.ScalingGroupID, newMinSize)
+		if err != nil {
+			fmt.Printf("Error on scaling group %v: %v", sg.ScalingConfigurationName, err)
+		}
+
+		fmt.Println("Changed min size of scaling group:", sg.ScalingGroupName)
+	}
+}
+
+// ChangeMinSize will change the min size of the specified scaling group
+func (c *Client) ChangeMinSize(scalingGroupID string, newMinSize int) error {
+	err := c.changeMinSize(scalingGroupID, newMinSize)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) changeMinSize(scalingGroupID string, newMinSize int) error {
+	req := ess.CreateModifyScalingGroupRequest()
+	req.ScalingGroupId = scalingGroupID
+	req.MinSize = requests.NewInteger(newMinSize)
+
+	_, err := c.ModifyScalingGroup(req)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

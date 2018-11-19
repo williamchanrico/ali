@@ -29,7 +29,8 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:   "ali",
 	Short: "Personal CLI tool to interact with Aliyun console.",
-	Long:  `Personal CLI tool to interact with Aliyun or Alibaba Cloud console.`,
+	Long: `Personal CLI tool to interact with Aliyun or Alibaba Cloud console.
+Report any issue via slack @william.chanrico, Thank you.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
