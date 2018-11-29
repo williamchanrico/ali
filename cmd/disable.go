@@ -28,20 +28,25 @@ var disableCmd = &cobra.Command{
 	Use:   "disable SCALING_GROUP_NAME",
 	Short: "Disables upscale/downscale alarm task",
 	Long:  `Will disable upscale or downscale event-trigger task`,
-	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		target := ""
 		fmt.Print("Disabling Event-Trigger Task ")
-		color.Green("%v\n", args[0])
+		if len(args) > 0 {
+			target = args[0]
+			color.Green("%v\n", target)
+		} else {
+			color.Green("for all scaling group(s)\n")
+		}
 
 		ess := ess.New()
-		sgList, err := ess.QuerySGInfo(args[0])
+		sgList, err := ess.QuerySGInfo(target)
 		if err != nil {
 			fmt.Println(fmt.Errorf("Failed to query scaling group list: %s", err))
 		}
 
 		for i := range sgList {
 			// Only processes exact scaling group name
-			if sgList[i].ScalingGroupName != args[0] {
+			if !all && sgList[i].ScalingGroupName != target {
 				continue
 			}
 
@@ -52,9 +57,9 @@ var disableCmd = &cobra.Command{
 
 			color.Yellow("\n--------------- %v ---------------\n", i)
 			for j := range etList {
-				if (upscale || all) && strings.Contains(etList[j].Name, "upscale") {
+				if (upscale || both) && strings.Contains(etList[j].Name, "upscale") {
 					disableAlarm(ess, etList[j])
-				} else if (downscale || all) && strings.Contains(etList[j].Name, "downscale") {
+				} else if (downscale || both) && strings.Contains(etList[j].Name, "downscale") {
 					disableAlarm(ess, etList[j])
 				}
 
@@ -89,5 +94,6 @@ func init() {
 
 	disableCmd.Flags().BoolVarP(&upscale, "upscale", "u", false, "Disable upscale event-trigger task")
 	disableCmd.Flags().BoolVarP(&downscale, "downscale", "d", false, "Disable downscale event-trigger task")
-	disableCmd.Flags().BoolVarP(&all, "all", "a", false, "Disable upscale and downscale event-trigger task")
+	disableCmd.Flags().BoolVarP(&both, "both", "b", false, "Disable upscale and downscale event-trigger task")
+	disableCmd.Flags().BoolVarP(&all, "all", "a", false, "Apply to all scaling groups")
 }
