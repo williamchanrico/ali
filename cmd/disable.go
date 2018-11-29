@@ -31,7 +31,7 @@ var disableCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		target := ""
 		fmt.Print("Disabling Event-Trigger Task ")
-		if len(args) > 1 {
+		if len(args) > 0 {
 			target = args[0]
 			color.Green("%v\n", target)
 		} else {
