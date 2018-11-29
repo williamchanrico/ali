@@ -28,20 +28,25 @@ var enableCmd = &cobra.Command{
 	Use:   "enable SCALING_GROUP_NAME",
 	Short: "Enables upscale/downscale alarm task",
 	Long:  `Will enable upscale or downscale event-trigger task`,
-	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		target := ""
 		fmt.Print("Enabling Event-Trigger Task ")
-		color.Green("%v\n", args[0])
+		if len(args) > 1 {
+			target = args[0]
+			color.Green("%v\n", target)
+		} else {
+			color.Green("for all scaling group(s)\n")
+		}
 
 		ess := ess.New()
-		sgList, err := ess.QuerySGInfo(args[0])
+		sgList, err := ess.QuerySGInfo(target)
 		if err != nil {
 			fmt.Println(fmt.Errorf("Failed to query scaling group list: %s", err))
 		}
 
 		for i := range sgList {
-			// Only processes exact scaling group name
-			if sgList[i].ScalingGroupName != args[0] {
+			// Only processes exact scaling group name if not applying to all
+			if !all && sgList[i].ScalingGroupName != target {
 				continue
 			}
 
@@ -52,9 +57,9 @@ var enableCmd = &cobra.Command{
 
 			color.Yellow("\n--------------- %v ---------------\n", i)
 			for j := range etList {
-				if (upscale || all) && strings.Contains(etList[j].Name, "upscale") {
+				if (upscale || both) && strings.Contains(etList[j].Name, "upscale") {
 					enableAlarm(ess, etList[j])
-				} else if (downscale || all) && strings.Contains(etList[j].Name, "downscale") {
+				} else if (downscale || both) && strings.Contains(etList[j].Name, "downscale") {
 					enableAlarm(ess, etList[j])
 				}
 
@@ -89,5 +94,6 @@ func init() {
 
 	enableCmd.Flags().BoolVarP(&upscale, "upscale", "u", false, "Enable upscale event-trigger task")
 	enableCmd.Flags().BoolVarP(&downscale, "downscale", "d", false, "Enable downscale event-trigger task")
-	enableCmd.Flags().BoolVarP(&all, "all", "a", false, "Enable upscale and downscale event-trigger task")
+	enableCmd.Flags().BoolVarP(&both, "both", "b", false, "Enable upscale and downscale event-trigger task")
+	enableCmd.Flags().BoolVarP(&all, "all", "a", false, "Apply to all scaling groups")
 }

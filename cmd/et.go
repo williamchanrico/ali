@@ -26,6 +26,7 @@ var (
 	upscale   bool
 	downscale bool
 	all       bool
+	both      bool
 )
 
 // etCmd represents the et command
