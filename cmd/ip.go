@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
@@ -25,6 +26,7 @@ import (
 var hostGroup string
 var noConsulTags bool
 var includeStoppedInstances bool
+var generateAnsibleInventory bool
 
 // ipCmd represents the ip command
 var ipCmd = &cobra.Command{
@@ -42,23 +44,51 @@ Use --all flag to include stopped instance(s).`,
 		fmt.Print("Querying IP(s) of hostgroup ")
 		color.Green("%v\n", args[0])
 
+		var invFile *os.File
+		var err error
+		if generateAnsibleInventory {
+			invFile, err = os.OpenFile("inventory."+args[0]+".ini", os.O_CREATE|os.O_WRONLY, 0644)
+			if err != nil {
+				fmt.Println("Error opening file:", err)
+				return
+			}
+
+			_, err = invFile.WriteString("[" + args[0] + "]\n")
+			if err != nil {
+				fmt.Println("Error writing hostgroup to file:", err)
+				return
+			}
+		}
+		//defer invFile.Close()
+
 		ecs := ecs.New()
 		ipList, err := ecs.QueryIPList(args[0])
 		if err != nil {
 			fmt.Println(fmt.Errorf("Failed to query IP list: %s", err))
 		}
 
-		color.Yellow("\n---")
-		for i := range ipList {
-			if !includeStoppedInstances && !ipList[i].IsRunning {
+		for _, ip := range ipList {
+			if !includeStoppedInstances && !ip.IsRunning {
 				continue
 			}
+
+			if generateAnsibleInventory {
+				if ip.ConsulTag == "" {
+					_, err = invFile.WriteString(ip.IP + "\n")
+				} else {
+					_, err = invFile.WriteString(ip.IP + "\tconsul_tags=" + ip.ConsulTag + "\n")
+				}
+				if err != nil {
+					fmt.Println("Error writing IP(s) to file:", err)
+				}
+			}
+
 			color.Set(color.FgWhite)
-			fmt.Printf("%v", ipList[i].IP)
+			fmt.Printf("%v", ip.IP)
 
 			if !noConsulTags {
 				color.Set(color.FgYellow)
-				fmt.Printf("\t%v\n", ipList[i].ConsulTag)
+				fmt.Printf("\t%v\n", ip.ConsulTag)
 			} else {
 				fmt.Printf("\n")
 			}
@@ -72,5 +102,6 @@ Use --all flag to include stopped instance(s).`,
 func init() {
 	ipCmd.Flags().BoolVarP(&noConsulTags, "no-tag", "n", false, "Hide consul_tags")
 	ipCmd.Flags().BoolVarP(&includeStoppedInstances, "all", "a", false, "Include stopped instance(s)")
+	ipCmd.Flags().BoolVarP(&generateAnsibleInventory, "generate-inv", "g", false, "Generate dynamic ansible inventory.")
 	rootCmd.AddCommand(ipCmd)
 }
