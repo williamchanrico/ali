@@ -4,8 +4,6 @@
 
 Personal CLI tool to interact with Aliyun or Alibaba Cloud console.
 
-This tool is designed with my workplace's cloud environment in mind.
-
 [![asciicast](https://asciinema.org/a/gee4XkKWpvENAuBOaHbSMFIIN.png)](https://asciinema.org/a/gee4XkKWpvENAuBOaHbSMFIIN)
 
 ## Setup
@@ -26,19 +24,21 @@ Supports `dep ensure -v` to make our life a bit easier.
 
 ```txt
 $ ali help
-Using config file: /home/william/.ali.yaml
 Personal CLI tool to interact with Aliyun or Alibaba Cloud console.
 
 Usage:
   ali [command]
 
 Available Commands:
+  change      Change attributes of cloud objects
   downscale   Remove all upscaled instance down to minimum instance.
   et          Query Event-Trigger Task(s) from aliyun.
   help        Help about any command
   ip          Query active IP(s) of a service hostgroup
-  price       Show real-time price per hour for the instance type in USD
+  memoryUsage Get and calculate the memory usage of instance(s) by hostgroups
+  price       Show real-time price per hour for the instance type in USD (default region: ap-southeast-1).
   sg          Query active ScalingGroup of a service by name
+  upscale     Upscale a scaling group to add specified number of instances.
 
 Flags:
       --config string   config file (default is $HOME/.ali.yaml)
