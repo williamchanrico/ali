@@ -59,7 +59,7 @@ Use --all flag to include stopped instance(s).`,
 				return
 			}
 		}
-		//defer invFile.Close()
+		defer invFile.Close()
 
 		ecs := ecs.New()
 		ipList, err := ecs.QueryIPList(args[0])
