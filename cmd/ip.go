@@ -41,13 +41,19 @@ And by default will only show running instance(s),
 Use --all flag to include stopped instance(s).`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		aliyunInvPath := "inventory." + args[0] + ".ini"
+		if _, err := os.Stat("aliyun"); !os.IsNotExist(err) {
+			aliyunInvPath = "aliyun/" + aliyunInvPath
+		}
+
 		fmt.Print("Querying IP(s) of hostgroup ")
 		color.Green("%v\n", args[0])
 
-		var invFile *os.File
 		var err error
+		var invFile *os.File
 		if generateAnsibleInventory {
-			invFile, err = os.OpenFile("inventory."+args[0]+".ini", os.O_CREATE|os.O_WRONLY, 0644)
+			fmt.Printf("Writing to %v\n", aliyunInvPath)
+			invFile, err = os.OpenFile(aliyunInvPath, os.O_CREATE|os.O_WRONLY, 0644)
 			if err != nil {
 				fmt.Println("Error opening file:", err)
 				return
@@ -67,6 +73,7 @@ Use --all flag to include stopped instance(s).`,
 			fmt.Println(fmt.Errorf("Failed to query IP list: %s", err))
 		}
 
+		color.Yellow("---")
 		for _, ip := range ipList {
 			if !includeStoppedInstances && !ip.IsRunning {
 				continue
