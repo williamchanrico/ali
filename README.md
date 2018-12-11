@@ -1,8 +1,50 @@
-# ali
+<h1 align="center">Ali... that's it.</h1>
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/williamchanrico/ali)](https://goreportcard.com/report/github.com/williamchanrico/ali)
+<div align="center">
+  :house_with_garden:
+</div>
+<div align="center">
+  <strong>CLI tool to ease the interaction with Alibaba Cloud</strong>
+</div>
+<div align="center">
+  A <code>small</code> tool to simplify everyday tasks.
+</div>
 
-Personal CLI tool to interact with Aliyun or Alibaba Cloud console.
+<br />
+
+<div align="center">
+  <!-- GPL License -->
+  <a href="https://opensource.org/licenses/GPL-3.0/"><img
+	src="https://badges.frapsoft.com/os/gpl/gpl.png?v=103"
+	border="0"
+	alt="GPL Licence"
+	title="GPL Licence">
+  </a>
+  <!-- Open Source Love -->
+  <a href="https://opensource.org/licenses/GPL-3.0/"><img
+	src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103"
+	border="0"
+	alt="Open Source Love"
+	title="Open Source Love">
+  </a>
+  <!-- Go Report Card -->
+  <a href="https://goreportcard.com/report/github.com/williamchanrico/ali"><img
+	src="https://goreportcard.com/badge/github.com/williamchanrico/ali"
+	border="0"
+	alt="Go Report Card"
+	title="Go Report Card">
+  </a>
+</div>
+
+<div align="center">
+  <h3>
+    <a href="https://arzhon.id">Website</a>
+  </h3>
+</div>
+
+## Introduction
+
+Your personal CLI tool to interact with Aliyun or Alibaba Cloud console.
 
 [![asciicast](https://asciinema.org/a/gee4XkKWpvENAuBOaHbSMFIIN.png)](https://asciinema.org/a/gee4XkKWpvENAuBOaHbSMFIIN)
 
@@ -16,9 +58,9 @@ ALICLOUD_SECRET_KEY: <YOUR_SECRET_KEY>
 ALICLOUD_REGION_ID: <REGION_ID>
 ```
 
-Uses `viper.AutomaticEnv()`, means it can also read those config from Env variable.
+It can also be read from Env variable.
 
-Supports `dep ensure -v` to make our life a bit easier.
+Supports `dep ensure -v`.
 
 ## Usage
 
