@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const instancePriceURL = "https://g.alicdn.com/aliyun/ecs-price-info-intl/2.0.7/price" +
+const defaultInstancePriceURL = "https://g.alicdn.com/aliyun/ecs-price-info-intl/2.0.7/price" +
 	"/download/instancePrice.json"
 
 // InstancePrice contains price of an instance type
@@ -45,7 +45,11 @@ type Hour struct {
 }
 
 // QueryPriceList returns price list for all instances type from all region
-func (c *Client) QueryPriceList() ([]InstancePrice, error) {
+func QueryPriceList(instancePriceURL string) ([]InstancePrice, error) {
+	if instancePriceURL == "" {
+		instancePriceURL = defaultInstancePriceURL
+	}
+
 	priceList := []InstancePrice{}
 
 	resp, err := http.Get(instancePriceURL)

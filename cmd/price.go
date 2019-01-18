@@ -34,8 +34,7 @@ pricing (default region is Singapore ap-southeast-1)`,
 			args = append(args, "ap-southeast-1")
 		}
 
-		ecs := ecs.New()
-		priceList, err := ecs.QueryPriceList()
+		priceList, err := ecs.QueryPriceList("")
 		if err != nil {
 			fmt.Println(fmt.Errorf("Failed to query price list: %s", err))
 		}
