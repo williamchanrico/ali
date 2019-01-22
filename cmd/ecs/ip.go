@@ -15,6 +15,8 @@
 package ecs
 
 import (
+	"fmt"
+
 	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/requests"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/ecs"
 )
@@ -86,30 +88,24 @@ func (c *Client) QueryIPList(hostgroup string) ([]IPInfo, error) {
 }
 
 // QueryAllHostgroupIP will query all IP of existing running instances
-// The other tags are static: "Environment=production" and "Datacenter=alisg"
 // Returns map["tkp-hostgroup"] = []string{"IP_1", "IP_2", ...}
 func (c *Client) QueryAllHostgroupIP() (map[string][]string, error) {
 	req := ecs.CreateDescribeInstancesRequest()
 	req.PageSize = requests.NewInteger(100)
 	req.PageNumber = requests.NewInteger(1)
-	req.Tag = &[]ecs.DescribeInstancesTag{
-		ecs.DescribeInstancesTag{
-			Value: "production",
-			Key:   "Environment",
-		},
-		ecs.DescribeInstancesTag{
-			Value: "alisg",
-			Key:   "Datacenter",
-		},
-	}
 
 	hostgroupList := make(map[string][]string)
 
+	processedInstance := 0
 	for totalCount := req.PageSize; totalCount == req.PageSize; {
 		resp, err := c.DescribeInstances(req)
 		if err != nil {
 			return nil, err
 		}
+
+		processedInstance += len(resp.Instances.Instance)
+		fmt.Printf("Processing %-4v/%-4v instances [%-4v hostgroup found so far]\n",
+			processedInstance, resp.TotalCount, len(hostgroupList))
 
 		for i := range resp.Instances.Instance {
 			instance := resp.Instances.Instance[i]
@@ -127,7 +123,8 @@ func (c *Client) QueryAllHostgroupIP() (map[string][]string, error) {
 				continue
 			}
 
-			hostgroupList[hostgroup] = append(hostgroupList[hostgroup], instance.NetworkInterfaces.NetworkInterface[0].PrimaryIpAddress)
+			ipAddress := instance.NetworkInterfaces.NetworkInterface[0].PrimaryIpAddress
+			hostgroupList[hostgroup] = append(hostgroupList[hostgroup], ipAddress)
 		}
 
 		req.PageNumber = requests.NewInteger(resp.PageNumber + 1)
