@@ -26,7 +26,7 @@ import (
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
-	Use:   "list",
+	Use:   "list TARGET_FILE",
 	Short: "Generate a JSON file containing all hostgroups with IP(s).",
 	Long: `Generate a JSON file containing all hostgroups along with it's
 associated IP addresses.
@@ -56,7 +56,7 @@ Example of the generated JSON:
 		}
 
 		var invFile *os.File
-		invFile, err = os.OpenFile(args[0], os.O_CREATE|os.O_WRONLY, 0644)
+		invFile, err = os.OpenFile(args[0], os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
 		if err != nil {
 			fmt.Println("Error opening file:", err)
 			return
